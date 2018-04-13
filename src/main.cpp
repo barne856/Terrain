@@ -37,6 +37,7 @@ class Test : public Game
     int previousAction = 0;         // GLFW previous keyboard action
     bool wireframe = false;         // Wireframe mode
     Terrain terrain;                // Terrain Digital Elevation Model (DEM)
+    float zoom = 0.0;
 
     // Initialize settings
     void init()
@@ -84,7 +85,7 @@ class Test : public Game
         glUniform1f(3, t);
         glUniform1f(4, terrain.maxElevation);
         glUniform1f(5, terrain.minElevation);
-        projection = vmath::perspective(60.0f, aspect, 0.001f, 100.0f) * vmath::translate(vmath::vec3(0.0f, 0.0f, -2.0f)) * vmath::rotate(45.0f, vmath::vec3(-1.0f, 0.0f, 0.0f)) * vmath::rotate(t*5.0f, vmath::vec3(0.0f, 0.0f, -1.0f));
+        projection = vmath::perspective(60.0f, aspect, 0.001f, 100.0f) * vmath::translate(vmath::vec3(0.0f, 0.0f, -2.0f+zoom)) * vmath::rotate(45.0f, vmath::vec3(-1.0f, 0.0f, 0.0f)) * vmath::rotate(t*5.0f, vmath::vec3(0.0f, 0.0f, -1.0f));
         glUniformMatrix4fv(2, 1, GL_FALSE, projection);
         
         // Render the terrain
@@ -116,6 +117,14 @@ class Test : public Game
         if(key == GLFW_KEY_R && action == GLFW_RELEASE && previousAction == GLFW_PRESS)
         {
             terrain.GenTerrain(10, 0.7f);
+        }
+        if(key == GLFW_KEY_KP_ADD && action == GLFW_RELEASE && previousAction == GLFW_PRESS)
+        {
+            zoom += 0.1f;
+        }
+        if(key == GLFW_KEY_KP_SUBTRACT && action == GLFW_RELEASE && previousAction == GLFW_PRESS)
+        {
+            zoom -= 0.1f;
         }
         previousAction = action;
     }
